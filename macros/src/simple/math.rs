@@ -28,3 +28,34 @@ macro_rules! add {
         }
     };
 }
+
+#[macro_export]
+macro_rules! add_as {
+    // matches a single expression and a type
+    ($x:expr, $y:ty) => {
+        $x as $y
+    };
+
+    // matches two expressions and a type
+    ($x:expr, $y:expr, $z:ty) => {
+        ($x + $y) as $z
+    };
+
+    // matches three expressions and a type to remove ambiguity with the previous pattern
+    ($x:expr, $y:expr, $z:expr, $w:ty) => {
+        ($x + $y + $z) as $w
+    };
+
+    // matches multiple expressions and a type
+    (
+        $($x:expr),+, $z:ty
+    ) => {
+        {
+            let mut sum = 0;
+            $(
+                sum += $x;
+            )+
+            sum as $z
+        }
+    };
+}
